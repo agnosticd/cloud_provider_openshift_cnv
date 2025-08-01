@@ -1,8 +1,8 @@
 ---
-- name: Include infra-cloud-tags role
+- name: Include infra_cloud_tags role
   when: cloud_tags_final is not defined
   ansible.builtin.include_role:
-    name: infra-cloud-tags
+    name: infra_cloud_tags
 
 - name: Set facts
   ansible.builtin.set_fact:
