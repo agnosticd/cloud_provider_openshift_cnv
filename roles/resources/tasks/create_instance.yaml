@@ -50,13 +50,13 @@
 
 - name: Set the instances disks
   ansible.builtin.set_fact:
-    _instance_disks: "{{ _instance_disks | from_yaml + [
+    _instance_disks: "{{ _instance_disks + [
     {
         'name': _disk.metadata.name,
         'disk': {'bus': _instance.disk_type | default('virtio')}
     }
     ] }}"
-    _instance_volumes: "{{ _instance_volumes | from_yaml + [
+    _instance_volumes: "{{ _instance_volumes + [
         {
             'name': _disk.metadata.name,
             'dataVolume': {'name': _disk.metadata.name}
@@ -75,8 +75,8 @@
         {{_instance.userdata | default('')|replace('#cloud-config','') | default('')}}
 
 - name: Set cloud init disk if needed
-  set_fact:
-    _instance_volumes: "{{ _instance_volumes | from_yaml + [
+  ansible.builtin.set_fact:
+    _instance_volumes: "{{ _instance_volumes + [
         {
             'name': 'cloudinitdisk',
             'cloudInitNoCloud': {
@@ -85,7 +85,7 @@
             }
         }
     ] }}"
-    _instance_disks: "{{ _instance_disks | from_yaml + [
+    _instance_disks: "{{ _instance_disks + [
         {
             'disk': {'bus': 'virtio'},
             'name': 'cloudinitdisk'
