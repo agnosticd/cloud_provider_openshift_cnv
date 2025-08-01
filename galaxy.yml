@@ -6,7 +6,7 @@
 namespace: agnosticd
 
 # The name of the collection. Has the same character restrictions as 'namespace'
-name: cloud_provider_cnv
+name: cloud_provider_openshift_cnv
 
 # The version of the collection. Must be compatible with semantic versioning
 version: 1.0.0
@@ -18,7 +18,6 @@ readme: README.md
 # @nicks:irc/im.site#channel'
 authors:
 - Wolfgang Kulhanek <wkulhane@redhat.com>
-
 
 ### OPTIONAL but strongly recommended
 # A short summary description of the collection
