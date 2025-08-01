@@ -5,12 +5,12 @@
     _instance_networks: []
     _instance_volumes:
       - dataVolume:
-          name: "INSTANCENAME-{{guid}}"
-        name: "INSTANCENAME-{{guid}}"
+          name: "INSTANCENAME-{{ guid }}"
+        name: "INSTANCENAME-{{ guid }}"
     _instance_disks:
       - disk:
           bus: "{{ _instance.disk_type | default('virtio') }}"
-        name: "INSTANCENAME-{{guid}}"
+        name: "INSTANCENAME-{{ guid }}"
 
 - name: Set the instances interfaces
   ansible.builtin.set_fact:
@@ -141,7 +141,7 @@
         annotations: >-
           {{ cloud_tags_final
           | combine(_instance.metadata | default({}))
-          | combine(_instance.tags | default({}) | ec2_tags_to_dict) }}
+          | combine(_instance.tags | default({}) | agnosticd.core.ec2_tags_to_dict) }}
       spec:
         dataVolumeTemplates: >-
          {{ _datavolume + (_instance.disks | default([]) | to_json | replace('INSTANCENAME',_instance_name) | from_json)  }}
