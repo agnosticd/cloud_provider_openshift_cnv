@@ -46,7 +46,10 @@
   delay: "{{ openshift_cnv_delay }}"
 
 - name: Create inventory (add_host)
-  when: item.metadata.annotations.managed | default(true) | bool
+  when:
+  - item.metadata.annotations.managed | default(true) | bool
+  - not item.metadata.annotations.role | default('') | lower() == 'control-plane'
+  - not item.metadata.annotations.role | default('') | lower() == 'worker'
   ansible.builtin.add_host:
     name: "{{ item.metadata.name }}"
     shortname: "{{ item.metadata.name }}"

@@ -172,6 +172,7 @@
   loop_control:
     index_var: _index
 
-- ansible.builtin.set_fact:
+- name: Collect the instance information
+  ansible.builtin.set_fact:
     r_openshift_cnv_instances: "{{ r_openshift_cnv_instances + [item] }}"
   loop: "{{ r_openshift_cnv_instance.results | list }}"
