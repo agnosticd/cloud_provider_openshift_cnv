@@ -1,5 +1,5 @@
 ---
-- name: Get a list of Network
+- name: Get a list of networks
   kubernetes.core.k8s_info:
     kind: NetworkAttachmentDefinition
     namespace: "{{ openshift_cnv_namespace }}"
