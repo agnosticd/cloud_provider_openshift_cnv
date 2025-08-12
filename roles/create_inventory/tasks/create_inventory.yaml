@@ -53,7 +53,7 @@
   ansible.builtin.add_host:
     name: "{{ item.metadata.name }}"
     shortname: "{{ item.metadata.name }}"
-    ansible_user: "{{ remote_user }}"
+    ansible_user: "{{ ansible_user }}"
     ansible_ssh_host: "{{ item.metadata.name }}"
     ssh_port: "{{ r_expose_bastion.result.spec.ports.0.nodePort | default(omit) }}"
     private_ip_address: "{{ item.metadata.name }}"
