@@ -4,4 +4,4 @@
     or ACTION == "start"
     or ACTION == "status"
   ansible.builtin.include_role:
-    name: openshift_cnv_resources
+    name: cloud_provider_openshift_cnv.resources
