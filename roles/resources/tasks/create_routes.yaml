@@ -19,7 +19,7 @@
         port:
           targetPort: "{{ route.targetPort }}"
         tls:
-          termination: passthrough
+          termination: "{{ route.tls_termination | default('passthrough') }}"
           insecureEdgeTerminationPolicy: None
           destinationCACertificate: "{{ route.tls_destinationCACertificate | default('') }}"
         to:
