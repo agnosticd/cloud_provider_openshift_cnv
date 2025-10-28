@@ -5,12 +5,12 @@
     _instance_networks: []
     _instance_volumes:
       - dataVolume:
-          name: "INSTANCENAME-{{guid}}"
-        name: "INSTANCENAME-{{guid}}"
+          name: "INSTANCENAME-{{ guid }}"
+        name: "INSTANCENAME-{{ guid }}"
     _instance_disks:
       - disk:
           bus: "{{ _instance.disk_type | default('virtio') }}"
-        name: "INSTANCENAME-{{guid}}"
+        name: "INSTANCENAME-{{ guid }}"
 
 - name: Set the instances interfaces
   ansible.builtin.set_fact:
