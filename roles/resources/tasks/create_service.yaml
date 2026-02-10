@@ -64,7 +64,7 @@
         name: "{{ _instance_name }}"
         namespace: "{{ openshift_cnv_namespace }}"
         annotations:
-          "NodePort/{{ service.name }}": "{{ _instance_node_ports }}"
+          "NodePort-{{ service.name }}": "{{ _instance_node_ports }}"
   vars:
     _instance_name: "{{ _instance.name }}{{ _index+1 if _instance.count|d(1)|int > 1 }}"
   loop: "{{ range(1, _instance.count | default(1)|int+1) | list }}"
