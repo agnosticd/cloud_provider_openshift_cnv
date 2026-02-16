@@ -169,8 +169,6 @@
           type: "{{ _instance.machine_type | default('pc-q35-rhel9.2.0') }}"
         memory:
           guest: "{{ _instance.memory }}"
-          hugepages:
-            pageSize: "1Gi"
         devices:
           disks: {{ _instance_disks | replace('INSTANCENAME', _instance_name) }}
           interfaces: {{ _instance_interfaces }}
