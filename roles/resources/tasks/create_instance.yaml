@@ -48,13 +48,13 @@
 
 - name: Set the instances disks
   ansible.builtin.set_fact:
-    _instance_disks: "{{ _instance_disks | from_yaml + [
+    _instance_disks: "{{ (_instance_disks if _instance_disks is not string else _instance_disks | from_yaml) + [
     {
         'name': _disk.metadata.name,
         'disk': {'bus': _instance.disk_type | default('virtio')}
     }
     ] }}"
-    _instance_volumes: "{{ _instance_volumes | from_yaml + [
+    _instance_volumes: "{{ (_instance_volumes if _instance_volumes is not string else _instance_volumes | from_yaml) + [
         {
             'name': _disk.metadata.name,
             'dataVolume': {'name': _disk.metadata.name}
@@ -66,13 +66,13 @@
 
 - name: Set the instances cdroms
   ansible.builtin.set_fact:
-    _instance_disks: "{{ _instance_disks | from_yaml + [
+    _instance_disks: "{{ (_instance_disks if _instance_disks is not string else _instance_disks | from_yaml) + [
     {
         'name': _disk.metadata.name,
         'cdrom': {'bus': 'sata'}
     }
     ] }}"
-    _instance_volumes: "{{ _instance_volumes | from_yaml + [
+    _instance_volumes: "{{ (_instance_volumes if _instance_volumes is not string else _instance_volumes | from_yaml) + [
         {
             'name': _disk.metadata.name,
             'dataVolume': {'name': _disk.metadata.name}
@@ -81,7 +81,6 @@
   loop: "{{ _instance.cdroms | default([]) | list }}"
   loop_control:
     loop_var: _disk
-
 
 - name: Set cloud_config
   ansible.builtin.set_fact:
@@ -94,7 +93,7 @@
 - name: Set cloud init disk if needed
   when: _instance.disable_cloud_init | default(false) == false
   set_fact:
-    _instance_volumes: "{{ _instance_volumes | from_yaml + [
+    _instance_volumes: "{{ (_instance_volumes if _instance_volumes is not string else _instance_volumes | from_yaml) + [
         {
             'name': 'cloudinitdisk',
             'cloudInitNoCloud': {
@@ -103,7 +102,7 @@
             }
         }
     ] }}"
-    _instance_disks: "{{ _instance_disks | from_yaml + [
+    _instance_disks: "{{ (_instance_disks if _instance_disks is not string else _instance_disks | from_yaml) + [
         {
             'disk': {'bus': 'virtio'},
             'name': 'cloudinitdisk'
@@ -123,7 +122,6 @@
   ansible.builtin.fail:
     msg: "PersistentVolumeClaim {{ _instance.image }} does not exist in namespace cnv-images"
   when: r_pvc_info.resources | length == 0  
-
 
 - name: Create instance(s) "{{ _instance.name }}"
   vars:
@@ -171,9 +169,8 @@
           type: "{{ _instance.machine_type | default('pc-q35-rhel9.2.0') }}"
         memory:
           guest: "{{ _instance.memory }}"
-          memory:
-            hugepages:
-              pageSize: "1Gi"
+          hugepages:
+            pageSize: "1Gi"
         devices:
           disks: {{ _instance_disks | replace('INSTANCENAME', _instance_name) }}
           interfaces: {{ _instance_interfaces }}
