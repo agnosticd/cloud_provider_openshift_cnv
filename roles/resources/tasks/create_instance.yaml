@@ -18,7 +18,7 @@
       {{
         _instance_interfaces + [{
           'name': _network.split('/')[1] if '/' in _network else _network + guid,
-          'macAddress': _instance.fixed_macs[_network] | default('2c:c2:60' | random_mac),
+          'macAddress': _instance.fixed_macs[_network] | default('2c:c2:60' | random_mac(seed=_instance.name + _network)),
           'bridge': {},
           'model': _instance.interface_model | default('virtio'),
         }
@@ -156,7 +156,7 @@
       subdomain: "{{ 'lab' if openshift_cnv_add_lab_subdomain | default(True) else '' }}"
       domain:
         firmware:
-          uuid: "{{ 99999999 | random | to_uuid }}"
+          uuid: "{{ 99999999 | random(seed=_instance_name) | to_uuid }}"
           bootloader:
       {% if _instance.bootloader | default('bios') == 'bios' %}
             bios: {}
