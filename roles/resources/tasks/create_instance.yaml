@@ -110,7 +110,7 @@
     ] }}"
 
 - name: Fail if image (pvc) doesn't exist on namespace cnv-images
-  when: _instance.image_type | default('pvc') == 'pvc' 
+  when: _instance.image_type | default('pvc') == 'pvc'
   kubernetes.core.k8s_info:
     api_version: v1
     kind: PersistentVolumeClaim
