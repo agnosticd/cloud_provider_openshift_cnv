@@ -92,7 +92,7 @@
 
 - name: Set cloud init disk if needed
   when: _instance.disable_cloud_init | default(false) == false
-  set_fact:
+  ansible.builtin.set_fact:
     _instance_volumes: "{{ (_instance_volumes if _instance_volumes is not string else _instance_volumes | from_yaml) + [
         {
             'name': 'cloudinitdisk',
