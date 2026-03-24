@@ -9,14 +9,14 @@
         namespace: "{{ openshift_cnv_namespace }}"
       spec: "{{ spec | from_yaml }}"
   vars:
-    _instance_name: "{{ _instance.name }}{{ _index+1 if _instance.count|d(1)|int > 1 }}"
+    _instance_name: "{{ _instance.name }}{{ _index + 1 if _instance.count | d(1) | int > 1 }}"
     spec: |
         ports:
           {{ service.ports }}
         selector:
           vm.cnv.io/name: "{{ _instance_name }}"
         type: {{ service.type | default('ClusterIP') }}
-  loop: "{{ range(1, _instance.count | default(1)|int+1) | list }}"
+  loop: "{{ range(1, _instance.count | default(1) | int + 1) | list }}"
   loop_control:
     index_var: _index
   register: r_create_service
@@ -50,7 +50,7 @@
   ansible.builtin.set_fact:
     _instance_node_ports: "{{ svc_np.resources[0].spec.ports | map(attribute='nodePort') | join(',') }}"
 
-- name: Add NodePort annotation for service {{ service.name }} to the instance
+- name: Add NodePort annotation to the instance for service {{ service.name }}
   when: service.type | default("ClusterIP") == "NodePort"
   kubernetes.core.k8s:
     state: patched
@@ -66,8 +66,8 @@
         annotations:
           NodePort-{{ service.name }}: "{{ _instance_node_ports }}"
   vars:
-    _instance_name: "{{ _instance.name }}{{ _index+1 if _instance.count|d(1)|int > 1 }}"
-  loop: "{{ range(1, _instance.count | default(1)|int+1) | list }}"
+    _instance_name: "{{ _instance.name }}{{ _index + 1 if _instance.count | d(1) | int > 1 }}"
+  loop: "{{ range(1, _instance.count | default(1) | int + 1) | list }}"
   loop_control:
     index_var: _index
   register: r_nodeport_annotation
@@ -98,8 +98,8 @@
           external_ip: "{{ _instance_external_ip }}"
           external_ports: "{{ _instance_external_ports }}"
   vars:
-    _instance_name: "{{ _instance.name }}{{ _index+1 if _instance.count|d(1)|int > 1 }}"
-  loop: "{{ range(1, _instance.count | default(1)|int+1) | list }}"
+    _instance_name: "{{ _instance.name }}{{ _index + 1 if _instance.count | d(1) | int > 1 }}"
+  loop: "{{ range(1, _instance.count | default(1) | int + 1) | list }}"
   loop_control:
     index_var: _index
   register: r_lb_patch
@@ -107,7 +107,7 @@
   retries: "{{ openshift_cnv_retries }}"
   delay: "{{ openshift_cnv_delay }}"
 
-- name: Add LoadBalancer annotation for service {{ service.name }} to the instance
+- name: Add LoadBalancer annotation to the instance for service {{ service.name }}
   when: service.type | default("ClusterIP") == "LoadBalancer"
   kubernetes.core.k8s:
     state: patched
@@ -123,8 +123,8 @@
         annotations:
           LoadBalancer-{{ service.name }}: "{{ _instance_external_ip }}:{{ _instance_external_ports }}"
   vars:
-    _instance_name: "{{ _instance.name }}{{ _index+1 if _instance.count|d(1)|int > 1 }}"
-  loop: "{{ range(1, _instance.count | default(1)|int+1) | list }}"
+    _instance_name: "{{ _instance.name }}{{ _index + 1 if _instance.count | d(1) | int > 1 }}"
+  loop: "{{ range(1, _instance.count | default(1) | int + 1) | list }}"
   loop_control:
     index_var: _index
   register: r_lb_annotation

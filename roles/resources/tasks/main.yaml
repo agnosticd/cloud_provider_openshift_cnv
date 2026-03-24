@@ -44,5 +44,5 @@
       api_key: "{{ k8s_auth_results.k8s_auth.api_key | default(sandbox_openshift_api_key) }}"
       validate_certs: false
   block:
-  - name: Include {{ ACTION }}_instances.yaml
+  - name: Include instances tasks for {{ ACTION }}
     ansible.builtin.include_tasks: "{{ ACTION }}_instances.yaml"

@@ -21,6 +21,7 @@
 - name: Print status information to a file
   ansible.builtin.copy:
     dest: "{{ output_dir }}/status.txt"
+    mode: "0644"
     content: |-
       {{ "%-20s %-10s" | format("Instance", "State") }}
       ----------------------------------------------------------------
