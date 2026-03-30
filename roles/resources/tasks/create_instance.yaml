@@ -87,11 +87,11 @@
     _cloud_config: |-
         #cloud-config
         ssh_authorized_keys:
-        - {{ lookup('file', ssh_provision_pubkey_path ) }}
-        {{_instance.userdata | default('') | replace('#cloud-config','') | default('')}}
+        - {{ lookup('file', ssh_provision_pubkey_path) }}
+        {{ _instance.userdata | default('') | replace('#cloud-config', '') | default('') }}
 
 - name: Set cloud init disk if needed
-  when: _instance.disable_cloud_init | default(false) == false
+  when: _instance.disable_cloud_init | default(false) is not true
   ansible.builtin.set_fact:
     _instance_volumes: "{{ (_instance_volumes if _instance_volumes is not string else _instance_volumes | from_yaml) + [
         {
@@ -127,7 +127,7 @@
 
 - name: Create instance(s) "{{ _instance.name }}"
   vars:
-    _instance_name: "{{ _instance.name }}{{ _index+1 if _instance.count | default(1) | int > 1 }}"
+    _instance_name: "{{ _instance.name }}{{ _index + 1 if _instance.count | default(1) | int > 1 }}"
     _datavolume: |
       - metadata:
           name: "{{ _instance_name }}-{{ guid }}"
@@ -185,17 +185,21 @@
         namespace: "{{ openshift_cnv_namespace }}"
         annotations: >-
           {{ cloud_tags_final
-          | combine(_instance.metadata|default({})) | combine(_instance.tags|default({}) | agnosticd.core.ec2_tags_to_dict) }}
+          | combine(_instance.metadata | default({})) | combine(_instance.tags | default({}) | agnosticd.core.ec2_tags_to_dict) }}
       spec:
         dataVolumeTemplates: >-
-         {{ _datavolume | from_yaml + (_instance.disks | default([]) | to_json | replace('INSTANCENAME',_instance_name) | from_json) + (_instance.cdroms | default([]) | to_json | replace('INSTANCENAME',_instance_name) | from_json) }}
+          {{ _datavolume | from_yaml
+          + (_instance.disks | default([]) | to_json
+          | replace('INSTANCENAME', _instance_name) | from_json)
+          + (_instance.cdroms | default([]) | to_json
+          | replace('INSTANCENAME', _instance_name) | from_json) }}
         running: true
         template:
           metadata:
             labels:
               vm.cnv.io/name: "{{ _instance_name }}"
           spec: "{{ _spec | from_yaml }}"
-  loop: "{{ range(1, _instance.count | default(1) | int+1) | list }}"
+  loop: "{{ range(1, _instance.count | default(1) | int + 1) | list }}"
   loop_control:
     index_var: _index
   register: r_openshift_cnv_instance
@@ -205,7 +209,7 @@
 
 - name: Wait until the VM is running
   vars:
-    _instance_name: "{{ _instance.name }}{{ _index+1 if _instance.count | default(1) | int > 1 }}"
+    _instance_name: "{{ _instance.name }}{{ _index + 1 if _instance.count | default(1) | int > 1 }}"
   kubernetes.core.k8s_info:
     api_version: kubevirt.io/v1
     kind: VirtualMachine
@@ -215,7 +219,7 @@
   until: r_vm_status.resources[0].status.printableStatus | default('') == "Running"
   retries: 30
   delay: 10
-  loop: "{{ range(1, _instance.count | default(1) | int+1) | list }}"
+  loop: "{{ range(1, _instance.count | default(1) | int + 1) | list }}"
   loop_control:
     index_var: _index
 
