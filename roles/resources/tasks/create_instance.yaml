@@ -213,8 +213,8 @@
     namespace: "{{ openshift_cnv_namespace }}"
   register: r_vm_status
   until: r_vm_status.resources[0].status.printableStatus | default('') == "Running"
-  retries: 30
-  delay: 10
+  retries: "{{ openshift_cnv_vm_running_retries | default(60) }}"
+  delay: "{{ openshift_cnv_vm_running_delay | default(10) }}"
   loop: "{{ range(1, _instance.count | default(1) | int+1) | list }}"
   loop_control:
     index_var: _index
