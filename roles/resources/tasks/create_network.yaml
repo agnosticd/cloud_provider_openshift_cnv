@@ -1,4 +1,6 @@
 ---
+- debug:
+    msg: "{{ _config is mapping }}"
 - name: Create network {{ _network.name }}
   vars:
     _config: >-
