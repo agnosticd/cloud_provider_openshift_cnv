@@ -30,7 +30,7 @@
         name: "{{ _network.name }}{{ guid }}"
         namespace: "{{ openshift_cnv_namespace }}"
       spec:
-        config: "{{ _config | to_json if _config is mapping else _config_dict }}"
+        config: "{{ _config | to_json }}"
   register: r_createnetwork
   until: r_createnetwork is success
   retries: "{{ openshift_cnv_retries }}"
