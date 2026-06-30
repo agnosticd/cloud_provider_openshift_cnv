@@ -22,7 +22,7 @@
         namespace: "{{ openshift_cnv_namespace }}"
       spec:
         config: >-
-          {{ _config_dict }}
+          {{ _config_dict | to_json }}
   register: r_createnetwork
   until: r_createnetwork is success
   retries: "{{ openshift_cnv_retries }}"
