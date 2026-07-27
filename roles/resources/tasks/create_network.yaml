@@ -7,7 +7,7 @@
       topology: layer2
       name: "{{ _network.name }}{{ guid }}"
       netAttachDefName: "{{ openshift_cnv_namespace }}/{{ _network.name }}{{ guid }}"
-      mtu: "{{ _network.mtu | default(1500) }}"
+      mtu: "{{ _network.mtu | default(1500) | int }}"
   kubernetes.core.k8s:
     definition:
       apiVersion: k8s.cni.cncf.io/v1
